@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component } from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { getMetricMetaInfo, timeToString, getDailyReminderValue } from '../utils/helpers'
 import MySlider from './MySlider'
@@ -9,7 +9,6 @@ import TextButton from './TextButton'
 import { submitEntry, removeEntry } from '../utils/api'
 import { connect } from 'react-redux'
 import { addEntry } from '../actions'
-
 
 function SubmitBtn ({ onPress }) {
   return (
@@ -32,33 +31,32 @@ class AddEntry extends Component {
   increment = (metric) => {
     const { max, step } = getMetricMetaInfo(metric)
 
-    this.setState(() => {
+    this.setState((state) => {
       const count = state[metric] + step
 
       return {
         ...state,
-        [metric]: count > max ? max : count
+        [metric]: count > max ? max : count,
       }
     })
   }
 
   decrement = (metric) => {
-    this.setState(() => {
+    this.setState((state) => {
       const count = state[metric] - getMetricMetaInfo(metric).step
 
       return {
         ...state,
-        [metric]: count > 0 ? 0 : count
+        [metric]: count < 0 ? 0 : count,
       }
     })
   }
 
   slide = (metric, value) => {
     this.setState(() => ({
-      [metric]: value,
+      [metric]: value
     }))
   }
-
   submit = () => {
     const key = timeToString()
     const entry = this.state
@@ -67,21 +65,14 @@ class AddEntry extends Component {
       [key]: entry
     }))
 
-    this.setState(() => ({ 
-      run: 0, 
-      bike: 0, 
-      swim: 0, 
-      sleep: 0, 
-      eat: 0 
-    }))
+    this.setState(() => ({ run: 0, bike: 0, swim: 0, sleep: 0, eat: 0 }))
 
-    // TODO Navigate to home
+    // ToDo Navigate to home
 
     submitEntry({ key, entry })
 
-    // TODO Clear local notification
+    // ToDo Clear local notification
   }
-
   reset = () => {
     const key = timeToString()
 
@@ -89,7 +80,7 @@ class AddEntry extends Component {
       [key]: getDailyReminderValue()
     }))
 
-    // TODO Route to Home
+    // ToDo Route to Home
 
     removeEntry(key)
   }
@@ -100,8 +91,8 @@ class AddEntry extends Component {
     if (this.props.alreadyLogged) {
       return (
         <View>
-          <Ionicons 
-            name='ios-happy'
+          <Ionicons
+            name={'ios-happy-outline'}
             size={100}
           />
           <Text>You already logged your information for today.</Text>
@@ -114,7 +105,7 @@ class AddEntry extends Component {
 
     return (
       <View>
-        <DateHeader date={(new Date()).toLocaleDateString()} />
+        <DateHeader date={(new Date()).toLocaleDateString()}/>
         {Object.keys(metaInfo).map((key) => {
           const { getIcon, type, ...rest } = metaInfo[key]
           const value = this.state[key]
@@ -122,23 +113,21 @@ class AddEntry extends Component {
           return (
             <View key={key}>
               {getIcon()}
-              {type === 'slider' 
-                ? <MySlider 
-                    value={value} 
-                    onChange={(value) => this.slide(key, value)} 
-                    {...rest} 
-                  /> 
-                : <MySteppers 
-                    value={value} 
-                    onIncrement={() => this.increment(key)} 
-                    onDecrement={() => this.decrement(key)} 
-                    {...rest} 
+              {type === 'slider'
+                ? <MySlider
+                    value={value}
+                    onChange={(value) => this.slide(key, value)}
+                    {...rest}
                   />
-              }
+                : <MySteppers
+                    value={value}
+                    onIncrement={() => this.increment(key)}
+                    onDecrement={() => this.decrement(key)}
+                    {...rest}
+                  />}
             </View>
           )
         })}
-
         <SubmitBtn onPress={this.submit} />
       </View>
     )
@@ -155,4 +144,4 @@ function mapStateToProps (state) {
 
 export default connect(
   mapStateToProps
-)(AddEntry) 
+)(AddEntry)

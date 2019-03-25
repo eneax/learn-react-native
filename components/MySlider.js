@@ -1,7 +1,7 @@
 import React from 'react'
-import { View, Text, Slider } from 'react-native'
+import { View, Slider, Text } from 'react-native'
 
-export default function MySlider({ max, unit, step, value, onChange }) {
+export default function MySlider ({ max, unit, step, value, onChange }) {
   return (
     <View>
       <Slider

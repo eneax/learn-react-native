@@ -14,4 +14,4 @@ export function addEntry (entry) {
     type: ADD_ENTRY,
     entry,
   }
-} 
+}
