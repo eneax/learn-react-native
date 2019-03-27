@@ -1,5 +1,12 @@
 import { AsyncStorage } from 'react-native'
-import { CALENDAR_STORAGE_KEY } from './_calendar'
+import { CALENDAR_STORAGE_KEY, formatCalendarResults } from './_calendar'
+
+
+export function fetchCalendarResults () {
+  return AsyncStorage.getItem(CALENDAR_STORAGE_KEY)
+    .then(formatCalendarResults)
+}
+
 
 // 1. Submit entry for the day
 // 2. Add it to the 'DB'
